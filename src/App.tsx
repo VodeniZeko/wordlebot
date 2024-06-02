@@ -1,13 +1,72 @@
 import { Container } from "@mui/material";
+
 import Layout from "./components/Layout";
 import Header from "./components/Header";
+import LoadingSpinner from "./components/LoadingSpinner";
+import ErrorMessage from "./components/ErrorMsg";
+import MainContent from "./components/MainContent";
+
+import useWordle from "./hooks/useWordle";
 
 function App() {
+    const {
+        guesses,
+        currentGuess,
+        clue,
+        isLoading,
+        isSubmitting,
+        error,
+        isSolved,
+        targetWord,
+        isTargetWordSet,
+        setClue,
+        setTargetWord,
+        setIsTargetWordSet,
+        handleSubmitClue,
+        setError,
+    } = useWordle();
+
+    const handleClueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setClue(e.target.value);
+    };
+
+    const handleTargetWordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTargetWord(e.target.value);
+    };
+
+    const handleSetTargetWord = () => {
+        if (targetWord.length !== 5 || !/^[a-zA-Z]{5}$/.test(targetWord)) {
+            setError(
+                "Target word must be 5 characters long and contain only alphabetic characters."
+            );
+            return;
+        }
+        setIsTargetWordSet(true);
+        setError(null);
+    };
+
     return (
         <Layout>
             <Container maxWidth="sm">
                 <Header />
-                {/* Insert App here */}
+                {isLoading ? (
+                    <LoadingSpinner />
+                ) : (
+                    <MainContent
+                        isSubmitting={isSubmitting}
+                        isTargetWordSet={isTargetWordSet}
+                        targetWord={targetWord}
+                        currentGuess={currentGuess}
+                        clue={clue}
+                        isSolved={isSolved}
+                        guesses={guesses}
+                        handleClueChange={handleClueChange}
+                        handleSubmitClue={handleSubmitClue}
+                        handleTargetWordChange={handleTargetWordChange}
+                        handleSetTargetWord={handleSetTargetWord}
+                    />
+                )}
+                <ErrorMessage message={error} />
             </Container>
         </Layout>
     );
