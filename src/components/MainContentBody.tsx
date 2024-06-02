@@ -44,6 +44,12 @@ const MainContentBody: React.FC<ContentProps> = ({
     handleClueChange,
     handleSubmitClue,
 }) => {
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && !isSubmitting && !isSolved) {
+            handleSubmitClue();
+        }
+    };
+
     return (
         <Box display="flex" flexDirection="column" alignItems="center">
             <Box marginBottom={2}>
@@ -55,6 +61,7 @@ const MainContentBody: React.FC<ContentProps> = ({
                     required
                     type="text"
                     value={clue}
+                    onKeyPress={handleKeyPress}
                     onChange={handleClueChange}
                     placeholder="Enter clue (e.g., gxyxx)"
                     inputProps={{ maxLength: 5 }}
@@ -72,8 +79,6 @@ const MainContentBody: React.FC<ContentProps> = ({
                 </Button>
             </Box>
 
-            {isSolved && <div className="success">Congratulations! You've solved the Wordle!</div>}
-
             <Box marginBottom={2} display="flex" justifyContent="center">
                 {generateClue(currentGuess, targetWord)
                     .split("")
@@ -87,7 +92,7 @@ const MainContentBody: React.FC<ContentProps> = ({
             </Box>
 
             <div>
-                {guesses
+                {[...guesses, { word: currentGuess, clue }]
                     .slice(0, -1)
                     .reverse()
                     .map((guess, index) => (

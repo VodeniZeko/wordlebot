@@ -1,4 +1,4 @@
-import { Container } from "@mui/material";
+import { Container, Box } from "@mui/material";
 
 import Layout from "./components/Layout";
 import Header from "./components/Header";
@@ -65,6 +65,12 @@ function App() {
                         handleTargetWordChange={handleTargetWordChange}
                         handleSetTargetWord={handleSetTargetWord}
                     />
+                )}
+                <hr />
+                {isSolved && (
+                    <Box marginTop={2} display="flex" flexDirection="column" alignItems="center">
+                        Yay! All Done
+                    </Box>
                 )}
                 <ErrorMessage message={error} />
             </Container>
