@@ -5,16 +5,20 @@ import Header from "./components/Header";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMsg";
 import MainContent from "./components/MainContent";
+import Popup from "./components/Popup";
 
 import useWordle from "./hooks/useWordle";
 
 function App() {
     const {
+        isPopupVisible,
+        closePopup,
         guesses,
         currentGuess,
         clue,
         isLoading,
         isSubmitting,
+        isFailed,
         error,
         isSolved,
         targetWord,
@@ -59,6 +63,7 @@ function App() {
                         currentGuess={currentGuess}
                         clue={clue}
                         isSolved={isSolved}
+                        isFailed={isFailed}
                         guesses={guesses}
                         handleClueChange={handleClueChange}
                         handleSubmitClue={handleSubmitClue}
@@ -73,6 +78,7 @@ function App() {
                     </Box>
                 )}
                 <ErrorMessage message={error} />
+                <Popup open={isPopupVisible} onClose={closePopup} />
             </Container>
         </Layout>
     );

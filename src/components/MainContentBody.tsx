@@ -11,6 +11,7 @@ interface ContentProps {
     currentGuess: string;
     clue: string;
     isSolved: boolean;
+    isFailed: boolean;
     guesses: WordleRequestItem[];
     handleClueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSubmitClue: () => void;
@@ -40,6 +41,7 @@ const MainContentBody: React.FC<ContentProps> = ({
     currentGuess,
     clue,
     isSolved,
+    isFailed,
     guesses,
     handleClueChange,
     handleSubmitClue,
@@ -65,7 +67,7 @@ const MainContentBody: React.FC<ContentProps> = ({
                     onChange={handleClueChange}
                     placeholder="Enter clue (e.g., gxyxx)"
                     inputProps={{ maxLength: 5 }}
-                    disabled={isSolved || guesses.length === 6}
+                    disabled={isSolved || guesses.length === 6 || isFailed}
                     helperText="Enter clue (e.g., gxyxx)"
                     sx={{ marginRight: 1 }}
                 />
@@ -73,9 +75,9 @@ const MainContentBody: React.FC<ContentProps> = ({
                     onClick={handleSubmitClue}
                     variant="contained"
                     startIcon={isSubmitting && <CircularProgress size={20} color="inherit" />}
-                    disabled={isSubmitting || isSolved}
+                    disabled={isSubmitting || isSolved || isFailed}
                 >
-                    Submit Clue
+                    {!isSubmitting ? "Submit Clue" : "Submitting"}
                 </Button>
             </Box>
 

@@ -11,6 +11,7 @@ interface MainContentProps {
     currentGuess: string;
     clue: string;
     isSolved: boolean;
+    isFailed: boolean;
     guesses: WordleRequestItem[];
     handleClueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSubmitClue: () => void;
@@ -25,6 +26,7 @@ const MainContent: React.FC<MainContentProps> = ({
     currentGuess,
     clue,
     isSolved,
+    isFailed,
     guesses,
     handleClueChange,
     handleSubmitClue,
@@ -46,6 +48,7 @@ const MainContent: React.FC<MainContentProps> = ({
                     currentGuess={currentGuess}
                     clue={clue}
                     isSolved={isSolved}
+                    isFailed={isFailed}
                     guesses={guesses}
                     handleClueChange={handleClueChange}
                     handleSubmitClue={handleSubmitClue}

@@ -1,3 +1,5 @@
+import { errorMessageMapping } from "./errorMessages";
+
 const generateClue = (guess: string, target: string) => {
     return guess
         .split("")
@@ -26,4 +28,17 @@ const getBackgroundColor = (clue: string) => {
     }
 };
 
-export { generateClue, getBackgroundColor };
+const mapErrorMessage = (apiErrorMessage: string) => {
+    if (errorMessageMapping.hasOwnProperty(apiErrorMessage)) {
+        return errorMessageMapping[apiErrorMessage];
+    }
+    return apiErrorMessage;
+};
+
+const isLastMessage = (message: string): boolean => {
+    const keys = Object.keys(errorMessageMapping);
+    const lastKey = keys[keys.length - 1];
+    return errorMessageMapping[lastKey] === message;
+};
+
+export { generateClue, getBackgroundColor, mapErrorMessage, isLastMessage };

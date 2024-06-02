@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import { mapErrorMessage, isLastMessage } from "../utils/helpers";
 import { WordleRequestItem, WordleResponse } from "../utils/types";
 import { API_URL } from "../utils/constants";
 
 const useWordle = () => {
+    const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
     const [guesses, setGuesses] = useState<WordleRequestItem[]>([]);
     const [currentGuess, setCurrentGuess] = useState<string>("");
     const [clue, setClue] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [isFailed, setIsFailed] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [isSolved, setIsSolved] = useState<boolean>(false);
     const [targetWord, setTargetWord] = useState<string>("");
@@ -18,8 +21,10 @@ const useWordle = () => {
     useEffect(() => {
         if (isTargetWordSet) {
             fetchInitialGuess();
-        }
+        } else setIsPopupVisible(true);
     }, [isTargetWordSet]);
+
+    const closePopup = () => setIsPopupVisible(false);
 
     const fetchInitialGuess = async () => {
         setIsLoading(true);
@@ -29,7 +34,9 @@ const useWordle = () => {
             setCurrentGuess(response.data.guess);
             setIsLoading(false);
         } catch (error: any) {
-            setError(error.response?.data);
+            const errMessage = mapErrorMessage(error.response?.data);
+            setError(errMessage);
+            setIsFailed(isLastMessage(errMessage));
             setIsLoading(false);
         }
     };
@@ -53,7 +60,9 @@ const useWordle = () => {
             setIsSubmitting(false);
             checkGameStatus(newGuesses);
         } catch (error: any) {
-            setError(error.response?.data);
+            const errMessage = mapErrorMessage(error.response?.data);
+            setError(errMessage);
+            setIsFailed(isLastMessage(errMessage));
             setIsSubmitting(false);
         }
     };
@@ -68,11 +77,14 @@ const useWordle = () => {
     };
 
     return {
+        isPopupVisible,
+        closePopup,
         guesses,
         currentGuess,
         clue,
         isLoading,
         isSubmitting,
+        isFailed,
         error,
         isSolved,
         targetWord,
